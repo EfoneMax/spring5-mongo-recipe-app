@@ -55,11 +55,13 @@ public class IngredientServiceImpl implements IngredientService {
             log.error("Ingredient id not found: " + ingredientId);
         }
 
+        IngredientCommand ingredientCommand = ingredientCommandOptional.get();
+        ingredientCommand.setRecipeId(recipeId);
+
         return ingredientCommandOptional.get();
     }
 
     @Override
-    @Transactional
     public IngredientCommand saveIngredientCommand(IngredientCommand command) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());
 
@@ -87,7 +89,7 @@ public class IngredientServiceImpl implements IngredientService {
             } else {
                 //add new Ingredient
                 Ingredient ingredient = ingredientCommandToIngredient.convert(command);
-              //  ingredient.setRecipe(recipe);
+                //  ingredient.setRecipe(recipe);
                 recipe.addIngredient(ingredient);
             }
 
@@ -107,7 +109,7 @@ public class IngredientServiceImpl implements IngredientService {
                         .findFirst();
             }
 
-            //to do check for fail
+            //todo check for fail
             return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
         }
 
@@ -133,7 +135,7 @@ public class IngredientServiceImpl implements IngredientService {
             if(ingredientOptional.isPresent()){
                 log.debug("found Ingredient");
                 Ingredient ingredientToDelete = ingredientOptional.get();
-               // ingredientToDelete.setRecipe(null);
+                // ingredientToDelete.setRecipe(null);
                 recipe.getIngredients().remove(ingredientOptional.get());
                 recipeRepository.save(recipe);
             }
