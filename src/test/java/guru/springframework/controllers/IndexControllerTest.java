@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -61,13 +62,12 @@ public class IndexControllerTest {
 
         recipes.add(recipe);
 
-        when(recipeService.getRecipes()).thenReturn(recipes);
+        when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipes));
 
         ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 
         //when
         String viewName = controller.getIndexPage(model);
-
 
         //then
         assertEquals("index", viewName);
